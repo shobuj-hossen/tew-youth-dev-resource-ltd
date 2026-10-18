@@ -1,0 +1,5 @@
+export * from "./schemas/auth"
+export * from "./schemas/courses"
+export * from "./schemas/permissions"
+export * from "./schemas/branches"
+export * from "./schemas/students"
