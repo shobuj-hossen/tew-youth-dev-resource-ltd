@@ -69,6 +69,7 @@ export const branchApplications = snakeCase.table(
             .notNull()
             .default(0),
         isOneTimePaid: boolean().default(false),
+        isCompanyBranch: boolean().default(false),
         paymentTransactionId: varchar(),
         createdAt,
         updatedAt,

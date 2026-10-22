@@ -13,17 +13,13 @@ export async function GET(req: NextRequest) {
         })
     }
 
-    const metadata = { someKey: "someValue" }
     try {
         await auth.api.createOrganization({
             body: {
-                name: "TEWYDR Organization", // required, The organization name.
-                slug: "tewydr-org", // required, The organization slug.
-                logo: "https://res.cloudinary.com/ddyrlplxn/image/upload/v1788849883/Testing/file_snoepb.png", // The organization logo.
-                metadata, // The metadata of the organization.
-                keepCurrentActiveOrganization: false, // Whether to keep the current active organization active after creating a new one.
+                name: "Tewydr Org",
+                slug: "tewydr-org",
+                keepCurrentActiveOrganization: false,
             },
-            // This endpoint requires session cookies.
             headers: await headers(),
         })
     } catch (error) {

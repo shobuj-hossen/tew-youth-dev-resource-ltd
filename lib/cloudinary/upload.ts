@@ -26,9 +26,10 @@ export async function uploadToCloudinary(
             {
                 resource_type:
                     options.resourceType ?? "auto",
-                folder: options.folder,
+                folder: `tewydr/${options.folder}`,
                 public_id: options.publicId,
                 tags: options.tags,
+                access_mode: "public",
             },
             (error, result) => {
                 if (error) {

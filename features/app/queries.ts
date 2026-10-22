@@ -5,7 +5,7 @@ export const getSidebarData = withPermission(
     { sidebar: ["view"] },
     async ({ org, orgMemberRole, session, user }) => {
         const institutionType =
-            company_config.COMPANY_ORG_ID === org.id
+            company_config.COMPANY_ORG_SLUG === org.slug
                 ? "COMPANY"
                 : "BRANCH"
 

@@ -76,10 +76,10 @@ export function Navbar({
             }`}
         >
             <div
-                className={`mx-auto flex items-center justify-between border bg-background/85 px-4 backdrop-blur-xl transition-all duration-500 ease-out sm:px-6 ${
+                className={`mx-auto flex items-center justify-between border bg-background/85 px-4 backdrop-blur-xl transition-all duration-500 ease-out sm:px-6 rounded-xl ${
                     scrolled
-                        ? "h-14 max-w-5xl rounded-full shadow-md shadow-black/5 sm:h-15"
-                        : "h-16 max-w-7xl rounded-xl shadow-lg shadow-black/5 sm:h-18"
+                        ? "h-14 max-w-5xl shadow-md shadow-black/5 sm:h-15"
+                        : "h-16 max-w-7xl shadow-lg shadow-black/5 sm:h-18"
                 }`}
             >
                 <div className="flex items-center justify-center gap-4">

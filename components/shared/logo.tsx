@@ -11,6 +11,7 @@ export function Logo({ scrolled }: { scrolled?: boolean }) {
                     src={logo}
                     height={60}
                     width={50}
+                    style={{ height: "auto" }}
                     alt="main-log"
                     loading="eager"
                     className={cn(

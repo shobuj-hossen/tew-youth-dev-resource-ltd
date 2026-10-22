@@ -6,6 +6,7 @@ import { redirect } from "next/navigation"
 import { ContinueWorkspaceDialog } from "./continue-workspace-dialog"
 import { db } from "@/drizzle/db"
 import { PaymentDialog } from "./payment-dialog"
+import { company_config } from "@/utils/config"
 
 export async function ContinueWorkspace() {
     const headers = await nextHeaders()
@@ -13,14 +14,13 @@ export async function ContinueWorkspace() {
         headers,
     })
 
-    console.log("working...", listOrg)
-
     const org = listOrg[0]
     if (!org) {
         redirect("/")
     }
 
-    const companyOrg = org.id === process.env.COMPANY_ORG_ID
+    const companyOrg =
+        org.slug === company_config.COMPANY_ORG_SLUG
     if (!companyOrg) {
         const application =
             await db.query.branchApplications.findFirst({

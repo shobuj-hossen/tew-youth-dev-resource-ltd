@@ -1,6 +1,7 @@
 import { db } from "@/drizzle/db"
 import { users } from "@/drizzle/schema"
 import { auth } from "@/lib/auth"
+import { company_config } from "@/utils/config"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
@@ -14,9 +15,9 @@ export async function GET(req: NextRequest) {
     }
     await auth.api.signUpEmail({
         body: {
-            name: "TEW",
-            email: "tew@gmail.com",
-            password: "tewpassword",
+            name: "ADMIN",
+            email: company_config.COMPANY_ADMIN_EMAIL,
+            password: "tewydrpass",
         },
 
         headers: await headers(),

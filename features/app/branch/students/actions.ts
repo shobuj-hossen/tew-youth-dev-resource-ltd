@@ -27,7 +27,6 @@ import { cleanupUploads } from "@/lib/cloudinary/cleanup-uploads"
 import { getNextEnrollmentNumbers } from "./utils"
 import { createSSLSession } from "@/lib/ssl-commerz/actions"
 import { redirect } from "next/navigation"
-import { company_config } from "@/utils/config"
 
 export const createStudent = withPermission(
     { students: ["create"] },
@@ -39,14 +38,11 @@ export const createStudent = withPermission(
             throw new ValidationError()
         }
 
-        console.log("entered=>>>", data)
         if (data.email) {
             const existEmail =
                 await db.query.students.findFirst({
                     where: { email: data.email },
                 })
-
-            console.log("exist=>>>", existEmail)
 
             if (existEmail) {
                 throw new Error("Email already exists")
@@ -316,8 +312,6 @@ export const joinAnotherCourse = withPermission(
                 },
             })
 
-        console.log("isExist ===>", isExist)
-
         if (isExist) {
             throw new Error(
                 "He/She is already enrolled in this course, try different one",
@@ -391,10 +385,11 @@ export const acceptPayment = withPermission(
             throw new NotFoundError()
         }
 
-        const companyBranch =
-            company_config.COMPANY_BRANCH_ID ===
-            student.organizationId
-        if (companyBranch || paidAmount === 0) {
+        // todo:
+        // const companyBranch =
+        //     company_config.COMPANY_BRANCH_ID ===
+        //     student.organizationId
+        if (false || paidAmount === 0) {
             await db
                 .update(enrollments)
                 .set({ paymentStatus: "paid", paidAmount })
