@@ -15,7 +15,7 @@ export async function RolesPermissionsPage() {
             <PageHeader>
                 <PageTitle>Roles & Permissions</PageTitle>
             </PageHeader>
-            <PageContent>
+            <PageContent className="max-w-2xl mx-auto md:bg-card rounded-2xl md:border md:p-6">
                 <ShowRolesPermissions {...res} />
             </PageContent>
         </Page>

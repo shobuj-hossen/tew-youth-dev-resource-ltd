@@ -9,9 +9,6 @@ import { AdditionalDataType } from "./types"
 export const getMembers = withPermission(
     { users: ["view"] },
     async ({ headers }) => {
-        "use cache"
-        cacheTag("members")
-
         return await auth.api.listMembers({
             query: {},
             headers,

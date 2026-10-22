@@ -70,7 +70,10 @@ export function ShowFullUser({ data }: { data: FullUser }) {
                 <CardHeader>
                     <CardTitle>User Details</CardTitle>
                     <CardAction>
-                        <Button variant={"secondary"}>
+                        <Button
+                            disabled
+                            variant={"secondary"}
+                        >
                             Edit <Edit />
                         </Button>
                     </CardAction>

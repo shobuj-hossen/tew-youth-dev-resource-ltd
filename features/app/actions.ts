@@ -31,7 +31,6 @@ export async function oneTimePayment({
         postcode: application.postalCode,
         type: "branch",
     })
-    console.log(session)
     await db
         .update(branchApplications)
         .set({ paymentTransactionId: orderId })

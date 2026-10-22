@@ -27,17 +27,18 @@ export function Permissions({
             : resources.branch
     return (
         <div className="divide-y space-y-6">
-            {Object.entries(appropriateResources).map(
-                ([resource, staticValues]) => (
-                    <Resource
-                        key={resource}
-                        resource={resource}
-                        staticValues={staticValues}
-                        values={permissions[resource]}
-                        onValueChange={onValueChange}
-                    />
-                ),
-            )}
+            {Object.entries({
+                ...resources.common,
+                ...appropriateResources,
+            }).map(([resource, staticValues]) => (
+                <Resource
+                    key={resource}
+                    resource={resource}
+                    staticValues={staticValues}
+                    values={permissions[resource]}
+                    onValueChange={onValueChange}
+                />
+            ))}
         </div>
     )
 }

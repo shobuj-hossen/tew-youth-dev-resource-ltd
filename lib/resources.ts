@@ -32,6 +32,7 @@ export const resources = {
         ] as const,
     },
     common: {
+        sidebar: ["view"] as const,
         users: [
             "view",
             "create",
@@ -44,7 +45,6 @@ export const resources = {
             "update",
             "delete",
         ] as const,
-        sidebar: ["view"] as const,
     },
 }
 

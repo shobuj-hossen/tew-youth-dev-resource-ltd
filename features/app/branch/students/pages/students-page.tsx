@@ -14,7 +14,7 @@ import Link from "next/link"
 
 export async function StudentsPage() {
     const students = await getStudents()
-    console.log("sss-===>", students)
+
     return (
         <Page>
             <PageHeader>

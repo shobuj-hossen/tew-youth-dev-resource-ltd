@@ -45,8 +45,6 @@ export function AvatarField({
             field.form.state.submissionAttempts > 0) &&
         !field.state.meta.isValid
 
-    console.log("error", field.state.meta.errors)
-
     const handleChange = (file?: File) => {
         if (!file) return
 

@@ -96,7 +96,7 @@ export function ApproveBranch({
     const [oneTimePaymentAmount, setOneTimePaymentAmount] =
         useState<string>("")
     const [paymentRequired, setPaymentRequired] =
-        useState<boolean>(true)
+        useState<boolean>(false)
     const [error, setError] = useState<string>("")
 
     const approveMutation = useMutation({
@@ -258,7 +258,7 @@ export function ApproveBranch({
                     </div>
 
                     {action === "approve" && (
-                        <div>
+                        <div className="space-y-4">
                             <div className="flex items-center justify-start flex-row gap-3">
                                 <Checkbox
                                     checked={
@@ -278,7 +278,7 @@ export function ApproveBranch({
                                 </Label>
                             </div>
                             {paymentRequired && (
-                                <Field>
+                                <Field className="gap-4">
                                     <Label>
                                         One Time Payable
                                         Amount
