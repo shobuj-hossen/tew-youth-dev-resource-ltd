@@ -1,22 +1,62 @@
-import { db } from "@/drizzle/db"
-import { branchApplications } from "@/drizzle/schema"
-import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest) {
-    const search = req.nextUrl.searchParams
+// export async function GET(req: NextRequest) {
+//     console.log(
+//         "[SSLCommerz success GET]",
+//         Object.fromEntries(
+//             req.nextUrl.searchParams.entries(),
+//         ),
+//     )
 
-    if (search.get("status") === "success") {
-        await db
-            .update(branchApplications)
-            .set({ isOneTimePaid: true })
-            .where(
-                eq(
-                    branchApplications.paymentTransactionId,
-                    search.get("paymentID")!,
-                ),
-            )
-        redirect("/dashboard/overviews")
+//     const contentType =
+//         req.headers.get("content-type") ?? ""
+
+//     let payload: Record<string, unknown> = {}
+
+//     if (
+//         contentType.includes(
+//             "application/x-www-form-urlencoded",
+//         ) ||
+//         contentType.includes("multipart/form-data")
+//     ) {
+//         const formData = await req.formData()
+//         payload = Object.fromEntries(formData.entries())
+//     } else if (contentType.includes("application/json")) {
+//         payload = await req.json()
+//     }
+
+//     console.log("payload=>", payload)
+//     return NextResponse.json({ received: true })
+// }
+
+export async function POST(req: NextRequest) {
+    const contentType =
+        req.headers.get("content-type") ?? ""
+
+    let payload: Record<string, unknown> = {}
+
+    if (
+        contentType.includes(
+            "application/x-www-form-urlencoded",
+        ) ||
+        contentType.includes("multipart/form-data")
+    ) {
+        const formData = await req.formData()
+        payload = Object.fromEntries(formData.entries())
+    } else if (contentType.includes("application/json")) {
+        payload = await req.json()
     }
+
+    // // Diagnostic only: do not mark the order as paid here.
+    // console.log("[SSLCommerz success POST]", {
+    //     contentType,
+    //     fields: Object.keys(payload),
+    //     status: payload.status,
+    //     tran_id: payload.tran_id,
+    // })
+
+    console.log("payload=>", payload)
+
+    redirect("/")
 }

@@ -87,11 +87,12 @@ export const registrationCardPDF = (
         },
         {
             y_axis: 57,
-            value: data.enrollment.rollNumber,
+
+            value: data.enrollment.registrationNumber,
         },
         {
             y_axis: 74,
-            value: data.enrollment.registrationNumber,
+            value: data.enrollment.rollNumber,
         },
     ]
 

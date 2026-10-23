@@ -2,13 +2,14 @@ import {
     BLOOD_GROUPS,
     ENROLLMENT_STATUS,
     GENDER,
+    PAYMENT_STATUS,
 } from "@/features/app/branch/students/constants"
 import {
+    boolean,
     date,
     index,
     integer,
     jsonb,
-    numeric,
     pgEnum,
     pgSequence,
     snakeCase,
@@ -17,7 +18,12 @@ import {
     uuid,
     varchar,
 } from "drizzle-orm/pg-core"
-import { createdAt, id, updatedAt } from "../helpers"
+import {
+    createdAt,
+    id,
+    paymentStatusEnum,
+    updatedAt,
+} from "../helpers"
 import { UploadedFileType } from "../types"
 import { organizations } from "./auth"
 import { courses } from "./courses"
@@ -159,11 +165,6 @@ export const enrollmentStatusEnum = pgEnum(
     ENROLLMENT_STATUS,
 )
 
-export const paymentStatusEnum = pgEnum("payment_status", [
-    "pending",
-    "paid",
-    "cancelled",
-])
 export const enrollments = snakeCase.table(
     "enrollments",
 
@@ -210,13 +211,11 @@ export const enrollments = snakeCase.table(
         status: enrollmentStatusEnum("status")
             .notNull()
             .default("active"),
-        paidAmount: integer().notNull().default(0),
 
-        paymentStatus: paymentStatusEnum("payment_status")
-            .notNull()
-            .default("pending"),
+        paymentStatus: paymentStatusEnum(
+            "payment_status",
+        ).default("unpaid"),
 
-        paymentTransactionId: varchar(),
         result: varchar(),
 
         createdAt,

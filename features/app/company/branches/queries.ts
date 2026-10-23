@@ -10,11 +10,13 @@ import {
 
 export const getBranches = withPermission(
     { branches: ["view"] },
-    async () => {
+    async ({ org }) => {
         "use cache"
         cacheTag("branches")
 
-        return await db.query.organizations.findMany()
+        return await db.query.organizations.findMany({
+            where: { NOT: { slug: org.slug } },
+        })
     },
 )
 
@@ -24,22 +26,26 @@ export const getBranchById = withPermission(
         "use cache"
         cacheTag("branches", `branch:${id}`)
 
-        const branch =
+        const organization =
             await db.query.organizations.findFirst({
                 where: { id },
             })
 
-        if (!branch) {
+        if (!organization) {
             throw new NotFoundError()
         }
-        const email = await db.query.branchApplications
+        const branchInfo = await db.query.branchApplications
             .findFirst({
-                where: { organizationId: branch?.id },
-                columns: { email: true },
+                where: { organizationId: organization?.id },
+                columns: {
+                    id: true,
+                    email: true,
+                    isCompanyBranch: true,
+                },
             })
-            .then((d) => d?.email)
+            .then((d) => ({ ...d, email: d?.email }))
 
-        return { ...branch, email }
+        return { ...organization, ...branchInfo }
     },
 )
 

@@ -18,6 +18,7 @@ import {
     enrollments,
     studentAcademicQualifications,
     students,
+    transactions,
 } from "@/drizzle/schema"
 import { eq } from "drizzle-orm"
 import { deleteFromCloudinary } from "@/lib/cloudinary/delete"
@@ -59,6 +60,7 @@ export const createStudent = withPermission(
 
         const image = await uploadToCloudinary(
             data.image.croppedFile,
+            { folder: `${org.slug}/students` },
         )
         try {
             await txDB.transaction(async (tx) => {
@@ -108,7 +110,7 @@ export const createStudent = withPermission(
 export const updateStudent = withPermission(
     { students: ["update"] },
     async (
-        _,
+        { org },
         inputs: UpdateStudentSchemaType & {
             enrollmentId: string
         },
@@ -174,6 +176,7 @@ export const updateStudent = withPermission(
         if (data.image && data.image.croppedFile.size > 0) {
             const uploadedImage = await uploadToCloudinary(
                 data.image.croppedFile,
+                { folder: `${org.slug}/students` },
             )
 
             image = uploadedImage
@@ -384,23 +387,31 @@ export const acceptPayment = withPermission(
         if (!student) {
             throw new NotFoundError()
         }
+        const companyBranch =
+            await db.query.branchApplications.findFirst({
+                where: {
+                    AND: [
+                        {
+                            organizationId:
+                                student.organizationId,
+                        },
+                        { isCompanyBranch: true },
+                    ],
+                },
+            })
 
-        // todo:
-        // const companyBranch =
-        //     company_config.COMPANY_BRANCH_ID ===
-        //     student.organizationId
-        if (false || paidAmount === 0) {
+        if (companyBranch || paidAmount === 0) {
             await db
                 .update(enrollments)
-                .set({ paymentStatus: "paid", paidAmount })
+                .set({ paymentStatus: "exempt" })
                 .where(eq(enrollments.id, enrollmentId))
             updateTag("students")
             updateTag("paid-students")
 
-            return message("Payment Successfull")
+            return message(" Enrollment accepted")
         }
 
-        const orderId = crypto.randomUUID().slice(0, 13)
+        const orderId = crypto.randomUUID().slice(0, 16)
         const session = await createSSLSession({
             orderId,
             amount: paidAmount,
@@ -413,14 +424,12 @@ export const acceptPayment = withPermission(
             postcode: "5555",
             type: "student",
         })
-        console.log(session)
-        await db
-            .update(enrollments)
-            .set({
-                paymentTransactionId: orderId,
-                paidAmount,
-            })
-            .where(eq(enrollments.id, enrollmentId))
+
+        await db.insert(transactions).values({
+            enrollmentId,
+            tranId: orderId,
+            amount: paidAmount.toString(),
+        })
 
         updateTag("students")
         updateTag("paid-students")

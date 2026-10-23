@@ -63,13 +63,15 @@ export function TableSkeleton({
         <div className={cn("w-full", className)}>
             <TableSkeletonHeader {...header} />
 
-            <TableSkeletonBody
-                rows={rows}
-                columns={columns}
-                rowHeight={rowHeight}
-            />
+            <div className="max-w-6xl mx-auto md:p-6 md:border md:rounded-2xl md:bg-card">
+                <TableSkeletonBody
+                    rows={rows}
+                    columns={columns}
+                    rowHeight={rowHeight}
+                />
 
-            <TableSkeletonPagination {...pagination} />
+                <TableSkeletonPagination {...pagination} />
+            </div>
         </div>
     )
 }

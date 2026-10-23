@@ -14,6 +14,11 @@ export const ENROLLMENT_STATUS = [
     "completed",
     "cancelled",
 ] as const
+export const PAYMENT_STATUS = [
+    "unpaid",
+    "paid",
+    "exempt",
+] as const
 
 export const COURSE_DURATION_OPTIONS = [
     {

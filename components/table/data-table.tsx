@@ -76,7 +76,7 @@ export function DataTable<TData extends RowData>({
     })
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto md:p-6 md:border md:rounded-2xl md:bg-card">
             <div className="flex items-center justify-between  gap-2 py-4">
                 <Input
                     placeholder={

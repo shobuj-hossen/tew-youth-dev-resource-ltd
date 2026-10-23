@@ -4,12 +4,15 @@ import { db, txDB } from "@/drizzle/db"
 import { withPermission } from "@/lib/dal"
 import { provideResultsSchema } from "./schemas"
 import z from "zod"
-import { enrollments } from "@/drizzle/schema"
+import {
+    branchApplications,
+    enrollments,
+} from "@/drizzle/schema"
 import { eq, inArray } from "drizzle-orm"
 import { updateTag } from "next/cache"
 
 export const getCertificatesByIds = withPermission(
-    { students: ["create"] },
+    { branches: ["create"] },
     async (
         { org },
         { enrollmentIds }: { enrollmentIds: string[] },
@@ -36,7 +39,7 @@ export const getCertificatesByIds = withPermission(
 )
 
 export const provideResults = withPermission(
-    { students: ["update"] },
+    { branches: ["update"] },
     async (
         _,
         input: z.infer<typeof provideResultsSchema>,
@@ -85,6 +88,38 @@ export const provideResults = withPermission(
         return {
             success: true,
             message: "Results published successfully",
+        }
+    },
+)
+
+export const updateCompanyBranch = withPermission(
+    { branches: ["update"] },
+    async (
+        { org },
+        input: {
+            branchId: string
+            isCompanyBranch: boolean
+        },
+    ) => {
+        const { branchId, isCompanyBranch } = input
+
+        const [updatedBranch] = await db
+            .update(branchApplications)
+            .set({
+                isCompanyBranch,
+            })
+            .where(eq(branchApplications.id, branchId))
+            .returning()
+
+        if (!updatedBranch) {
+            throw new Error("Branch not found")
+        }
+
+        updateTag("branch-enrollments")
+
+        return {
+            success: true,
+            message: "Branch settings updated successfully",
         }
     },
 )

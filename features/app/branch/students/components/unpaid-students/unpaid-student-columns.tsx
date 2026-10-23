@@ -62,6 +62,7 @@ export const unpaidStudentColumns = columnHelper.columns([
     }),
 
     columnHelper.accessor("student.name", {
+        id: "name",
         header: ({ column }) => (
             <DataTableColumnHeader
                 column={column}
@@ -83,7 +84,9 @@ export const unpaidStudentColumns = columnHelper.columns([
         header: "Duration",
         cell: ({ row }) => {
             return (
-                <Badge>{row.original.courseDuration}</Badge>
+                <Badge variant={"outline"}>
+                    {row.original.courseDuration}
+                </Badge>
             )
         },
     }),
@@ -113,9 +116,9 @@ export const unpaidStudentColumns = columnHelper.columns([
                     variant={
                         status === "paid"
                             ? "default"
-                            : status === "pending"
+                            : status === "unpaid"
                               ? "secondary"
-                              : "destructive"
+                              : "ghost"
                     }
                 >
                     {status}
