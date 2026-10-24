@@ -9,7 +9,12 @@ import {
     varchar,
 } from "drizzle-orm/pg-core"
 
-import { createdAt, id, updatedAt } from "../helpers"
+import {
+    createdAt,
+    id,
+    paymentStatusEnum,
+    updatedAt,
+} from "../helpers"
 import { UploadedFileType } from "../types"
 
 export const branchApplicationStatus = pgEnum(
@@ -65,12 +70,13 @@ export const branchApplications = snakeCase.table(
 
         rejectionReason: text(),
         //payments
+        oneTimePaymentStatus: paymentStatusEnum(
+            "one_time_payment_status",
+        ).default("unpaid"),
         oneTimePaymentAmount: integer()
             .notNull()
             .default(0),
-        isOneTimePaid: boolean().default(false),
         isCompanyBranch: boolean().default(false),
-        paymentTransactionId: varchar(),
         createdAt,
         updatedAt,
     },

@@ -89,12 +89,12 @@ export const relations = defineRelations(schema, (r) => ({
     },
     transactions: {
         enrollment: r.one.enrollments({
-            from: r.enrollments.id,
-            to: r.transactions.enrollmentId,
+            from: r.transactions.enrollmentId,
+            to: r.enrollments.id,
         }),
-        branchApplication: r.one.enrollments({
-            from: r.branchApplications.id,
-            to: r.transactions.enrollmentId,
+        branchApplication: r.one.branchApplications({
+            from: r.transactions.enrollmentId,
+            to: r.branchApplications.id,
         }),
     },
     studentAcademicQualifications: {

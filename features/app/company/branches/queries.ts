@@ -41,6 +41,8 @@ export const getBranchById = withPermission(
                     id: true,
                     email: true,
                     isCompanyBranch: true,
+                    oneTimePaymentAmount: true,
+                    oneTimePaymentStatus: true,
                 },
             })
             .then((d) => ({ ...d, email: d?.email }))

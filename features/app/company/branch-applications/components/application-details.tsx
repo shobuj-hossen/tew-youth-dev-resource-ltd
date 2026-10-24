@@ -99,7 +99,7 @@ export function ApplicationDetails({
                     <Info
                         label="Is Paid"
                         value={
-                            application.isOneTimePaid
+                            application.oneTimePaymentAmount
                                 ? "Paid"
                                 : "Pending"
                         }

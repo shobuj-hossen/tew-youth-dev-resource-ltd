@@ -1,9 +1,8 @@
 "use server"
 
 import { db } from "@/drizzle/db"
-import { branchApplications } from "@/drizzle/schema"
+import { transactions } from "@/drizzle/schema"
 import { createSSLSession } from "@/lib/ssl-commerz/actions"
-import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
 
 export async function oneTimePayment({
@@ -19,7 +18,7 @@ export async function oneTimePayment({
         redirect("/")
     }
 
-    const orderId = crypto.randomUUID().slice(0, 13)
+    const orderId = crypto.randomUUID().slice(0, 16)
     const session = await createSSLSession({
         orderId,
         amount: application.oneTimePaymentAmount,
@@ -31,10 +30,12 @@ export async function oneTimePayment({
         postcode: application.postalCode,
         type: "branch",
     })
-    await db
-        .update(branchApplications)
-        .set({ paymentTransactionId: orderId })
-        .where(eq(branchApplications.id, application.id))
+
+    await db.insert(transactions).values({
+        branchApplicationId: application.id,
+        tranId: orderId,
+        amount: application.oneTimePaymentAmount.toString(),
+    })
 
     redirect(session.GatewayPageURL)
 }

@@ -27,11 +27,9 @@ export async function POST(req: NextRequest) {
 
     if (payload) {
         const res = await db.query.transactions.findFirst({
-            where: { id: payload.tran_id },
-            with: { enrollment: { columns: { id: true } } },
+            where: { tranId: payload.tran_id },
         })
-
-        if (res && res.enrollment) {
+        if (res && res.enrollmentId) {
             await db
                 .update(transactions)
                 .set({
@@ -52,11 +50,9 @@ export async function POST(req: NextRequest) {
             await db
                 .update(enrollments)
                 .set({ paymentStatus: "paid" })
-                .where(
-                    eq(enrollments.id, res.enrollment.id),
-                )
+                .where(eq(enrollments.id, res.enrollmentId))
         }
     }
 
-    redirect("/branch/students")
+    redirect("/dashboard/students")
 }

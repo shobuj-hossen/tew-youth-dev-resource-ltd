@@ -27,7 +27,7 @@ export async function ContinueWorkspace() {
                 where: { organizationId: org.id },
                 columns: {
                     oneTimePaymentAmount: true,
-                    isOneTimePaid: true,
+                    oneTimePaymentStatus: true,
                 },
             })
         if (!application) {
@@ -35,7 +35,7 @@ export async function ContinueWorkspace() {
         }
 
         if (
-            !application.isOneTimePaid &&
+            application.oneTimePaymentStatus === "unpaid" &&
             application.oneTimePaymentAmount !== 0
         ) {
             return (

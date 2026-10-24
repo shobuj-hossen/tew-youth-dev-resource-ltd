@@ -212,9 +212,9 @@ export const enrollments = snakeCase.table(
             .notNull()
             .default("active"),
 
-        paymentStatus: paymentStatusEnum(
-            "payment_status",
-        ).default("unpaid"),
+        paymentStatus: paymentStatusEnum("payment_status")
+            .notNull()
+            .default("unpaid"),
 
         result: varchar(),
 

@@ -14,6 +14,6 @@ export const updatedAt = timestamp()
     .notNull()
 
 export const paymentStatusEnum = pgEnum(
-    "payment_status",
+    "payment_status_enum",
     PAYMENT_STATUS,
 )

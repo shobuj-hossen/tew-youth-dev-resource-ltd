@@ -2,7 +2,10 @@
 
 import { db, txDB } from "@/drizzle/db"
 import { withPermission } from "@/lib/dal"
-import { provideResultsSchema } from "./schemas"
+import {
+    oneTimePaymentSchema,
+    provideResultsSchema,
+} from "./schemas"
 import z from "zod"
 import {
     branchApplications,
@@ -120,6 +123,48 @@ export const updateCompanyBranch = withPermission(
         return {
             success: true,
             message: "Branch settings updated successfully",
+        }
+    },
+)
+
+export const updateBranchOneTimePayment = withPermission(
+    { branches: ["update"] },
+    async (
+        { org },
+        input: {
+            branchId: string
+            oneTimePaymentAmount: number
+        },
+    ) => {
+        const parsed = oneTimePaymentSchema.safeParse(input)
+
+        if (!parsed.success) {
+            throw new Error(
+                "Invalid one-time payment details",
+            )
+        }
+
+        const { branchId, oneTimePaymentAmount } =
+            parsed.data
+
+        const [updatedBranch] = await db
+            .update(branchApplications)
+            .set({
+                oneTimePaymentAmount,
+            })
+            .where(eq(branchApplications.id, branchId))
+            .returning({ id: branchApplications.id })
+
+        if (!updatedBranch) {
+            throw new Error("Branch not found")
+        }
+
+        updateTag("branch-enrollments")
+
+        return {
+            success: true,
+            message:
+                "One-time payment updated successfully",
         }
     },
 )

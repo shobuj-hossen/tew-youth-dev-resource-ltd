@@ -168,20 +168,20 @@ export async function seedStudents({
 
             const numbers = await getNextEnrollmentNumbers()
 
-            await tx.insert(enrollments).values({
-                studentId: newStudent.id,
-                courseId: course.id,
+            // await tx.insert(enrollments).values({
+            //     studentId: newStudent.id,
+            //     courseId: course.id,
 
-                courseDuration: "6_months",
-                courseRange: "2027-07_2027-12",
-                medium: "bangla",
+            //     courseDuration: "6_months",
+            //     courseRange: "2027-07_2027-12",
+            //     medium: "bangla",
 
-                status: "active",
-                paidAmount: 300,
-                paymentStatus: "paid",
+            //     status: "active",
+            //     paidAmount: 300,
+            //     paymentStatus: "paid",
 
-                ...numbers,
-            })
+            //     ...numbers,
+            // })
         })
     }
 }

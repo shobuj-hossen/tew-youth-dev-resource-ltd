@@ -121,9 +121,9 @@ export const studentColumns = columnHelper.columns([
                     variant={
                         status === "paid"
                             ? "default"
-                            : status === "pending"
+                            : status === "exempt"
                               ? "secondary"
-                              : "destructive"
+                              : "ghost"
                     }
                 >
                     {status}

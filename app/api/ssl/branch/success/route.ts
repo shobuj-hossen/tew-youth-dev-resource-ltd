@@ -1,40 +1,18 @@
+import { db } from "@/drizzle/db"
+import {
+    branchApplications,
+    transactions,
+} from "@/drizzle/schema"
+import { SSLCommerzPaymentPayload } from "@/lib/ssl-commerz/types"
+import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
-import { NextRequest, NextResponse } from "next/server"
-
-// export async function GET(req: NextRequest) {
-//     console.log(
-//         "[SSLCommerz success GET]",
-//         Object.fromEntries(
-//             req.nextUrl.searchParams.entries(),
-//         ),
-//     )
-
-//     const contentType =
-//         req.headers.get("content-type") ?? ""
-
-//     let payload: Record<string, unknown> = {}
-
-//     if (
-//         contentType.includes(
-//             "application/x-www-form-urlencoded",
-//         ) ||
-//         contentType.includes("multipart/form-data")
-//     ) {
-//         const formData = await req.formData()
-//         payload = Object.fromEntries(formData.entries())
-//     } else if (contentType.includes("application/json")) {
-//         payload = await req.json()
-//     }
-
-//     console.log("payload=>", payload)
-//     return NextResponse.json({ received: true })
-// }
+import { NextRequest } from "next/server"
 
 export async function POST(req: NextRequest) {
     const contentType =
         req.headers.get("content-type") ?? ""
 
-    let payload: Record<string, unknown> = {}
+    let payload: SSLCommerzPaymentPayload | null = null
 
     if (
         contentType.includes(
@@ -43,20 +21,50 @@ export async function POST(req: NextRequest) {
         contentType.includes("multipart/form-data")
     ) {
         const formData = await req.formData()
-        payload = Object.fromEntries(formData.entries())
+        payload = Object.fromEntries(
+            formData.entries(),
+        ) as unknown as SSLCommerzPaymentPayload
     } else if (contentType.includes("application/json")) {
         payload = await req.json()
     }
 
-    // // Diagnostic only: do not mark the order as paid here.
-    // console.log("[SSLCommerz success POST]", {
-    //     contentType,
-    //     fields: Object.keys(payload),
-    //     status: payload.status,
-    //     tran_id: payload.tran_id,
-    // })
+    console.log("payload===>>", payload)
 
-    console.log("payload=>", payload)
+    if (payload) {
+        const res = await db.query.transactions.findFirst({
+            where: { tranId: payload.tran_id },
+        })
+        console.log("res===>>", res)
 
-    redirect("/")
+        if (res && res.branchApplicationId) {
+            await db
+                .update(transactions)
+                .set({
+                    bankTranId: payload.bank_tran_id,
+                    cardBrand: payload.card_brand,
+                    cardType: payload.card_type,
+                    error: payload.error,
+                    tranDate: payload.tran_date,
+                    status: payload.status,
+                })
+                .where(
+                    eq(
+                        transactions.tranId,
+                        payload.tran_id,
+                    ),
+                )
+
+            await db
+                .update(branchApplications)
+                .set({ oneTimePaymentStatus: "paid" })
+                .where(
+                    eq(
+                        branchApplications.id,
+                        res.branchApplicationId,
+                    ),
+                )
+        }
+    }
+
+    redirect("/dashboard/overviews")
 }

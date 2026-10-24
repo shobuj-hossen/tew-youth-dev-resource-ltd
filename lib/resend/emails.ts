@@ -32,7 +32,7 @@ export async function sendEmailBranchApproved(
     const res = await resend.emails.send({
         from: "Acme <onboarding@resend.dev>",
         to: ["delivered@resend.dev"],
-        subject: "Reset your password",
+        subject: "Your Branch has been approved",
         react: BranchApprovedTemplate(props),
     })
 

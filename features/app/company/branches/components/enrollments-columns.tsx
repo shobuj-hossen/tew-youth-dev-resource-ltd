@@ -114,9 +114,9 @@ export const enrollmentsColumns = columnHelper.columns([
                     variant={
                         status === "paid"
                             ? "default"
-                            : status === "pending"
+                            : status === "unpaid"
                               ? "secondary"
-                              : "destructive"
+                              : "ghost"
                     }
                 >
                     {status}

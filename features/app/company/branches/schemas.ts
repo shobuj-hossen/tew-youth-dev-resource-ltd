@@ -21,3 +21,8 @@ export const provideResultsSchema = z.object({
         )
         .min(1),
 })
+
+export const oneTimePaymentSchema = z.object({
+    branchId: z.string().min(1),
+    oneTimePaymentAmount: z.number().int().min(0),
+})

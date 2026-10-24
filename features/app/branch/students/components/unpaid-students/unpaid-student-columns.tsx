@@ -132,6 +132,8 @@ export const unpaidStudentColumns = columnHelper.columns([
             const { isPending, mutate } = useMutation({
                 mutationFn: acceptPayment,
             })
+            const exampt = row.original.isCompanyBranch
+
             return (
                 <SubmitButton
                     isPending={isPending}
@@ -142,7 +144,9 @@ export const unpaidStudentColumns = columnHelper.columns([
                         })
                     }
                 >
-                    Pay {row.original.price} BDT
+                    {exampt
+                        ? "Exampt"
+                        : `Pay ${row.original.price} BDT`}
                 </SubmitButton>
             )
         },

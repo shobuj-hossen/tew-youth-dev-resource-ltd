@@ -63,7 +63,7 @@ export function TableSkeleton({
         <div className={cn("w-full", className)}>
             <TableSkeletonHeader {...header} />
 
-            <div className="max-w-6xl mx-auto md:p-6 md:border md:rounded-2xl md:bg-card">
+            <div className="max-w-7xl mx-auto md:p-6 md:border md:rounded-2xl md:bg-card">
                 <TableSkeletonBody
                     rows={rows}
                     columns={columns}

@@ -26,7 +26,7 @@ export const getStudents = withPermission(
 
         const res = await db.query.enrollments.findMany({
             where: {
-                paymentStatus: "paid",
+                paymentStatus: { OR: ["paid", "exempt"] },
                 student: { organizationId: org.id },
             },
             columns: {
@@ -71,9 +71,7 @@ export const getUnpaidStudents = withPermission(
 
         const res = await db.query.enrollments.findMany({
             where: {
-                paymentStatus: {
-                    NOT: "paid",
-                },
+                paymentStatus: "unpaid",
                 student: {
                     organizationId: org.id,
                 },
@@ -97,6 +95,14 @@ export const getUnpaidStudents = withPermission(
             },
         })
 
+        // find if this is company branch or not
+
+        const branch =
+            await db.query.branchApplications.findFirst({
+                where: { organizationId: org.id },
+                columns: { isCompanyBranch: true },
+            })
+
         return res.map((enrollment) => {
             const field =
                 feeField[
@@ -117,6 +123,8 @@ export const getUnpaidStudents = withPermission(
                     enrollment.courseRange,
                     enrollment.courseDuration as CourseDuration,
                 ),
+                isCompanyBranch:
+                    branch?.isCompanyBranch || false,
             }
         })
     },

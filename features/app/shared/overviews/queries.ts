@@ -24,7 +24,7 @@ export const getOverviews = withPermission(
 
         cacheTag(`overviews:${org.id}`)
 
-        if (company_config.COMPANY_ORG_ID === org.id) {
+        if (company_config.COMPANY_ORG_SLUG === org.slug) {
             const [branches, users, enrollmentCount] =
                 await Promise.all([
                     db
@@ -168,9 +168,9 @@ export const getOverviews = withPermission(
                                 students.organizationId,
                                 org.id,
                             ),
-                            inArray(
+                            eq(
                                 enrollments.paymentStatus,
-                                ["pending", "cancelled"],
+                                "unpaid",
                             ),
                         ),
                     ),
