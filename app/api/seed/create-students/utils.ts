@@ -7,6 +7,15 @@ import {
     INSTITUTION_OPTIONS,
 } from "@/features/app/branch/students/constants"
 
+import { UploadedFileType } from "@/drizzle/types"
+import { txDB } from "@/drizzle/db"
+import {
+    enrollments,
+    studentAcademicQualifications,
+    students,
+} from "@/drizzle/schema"
+import { getNextEnrollmentNumbers } from "@/features/app/branch/students/utils"
+
 function createBangladeshiMobile() {
     const prefix = faker.helpers.arrayElement([
         "013",
@@ -20,15 +29,6 @@ function createBangladeshiMobile() {
 
     return `${prefix}${faker.string.numeric(8)}`
 }
-import { UploadedFileType } from "@/drizzle/types"
-import { txDB } from "@/drizzle/db"
-import {
-    enrollments,
-    studentAcademicQualifications,
-    students,
-} from "@/drizzle/schema"
-import { getNextEnrollmentNumbers } from "@/features/app/branch/students/utils"
-
 function createAcademicInformation() {
     return {
         level: faker.helpers.arrayElement(
@@ -42,7 +42,7 @@ function createAcademicInformation() {
             max: new Date().getFullYear(),
         }),
         rollId: faker.string.numeric(8),
-        result: "",
+        result: "B+",
     }
 }
 
@@ -54,7 +54,9 @@ function createDateOfBirth() {
     })
 }
 
-function createStudentData(image: UploadedFileType) {
+export function createFakeStudentData(
+    image: UploadedFileType,
+) {
     const gender = faker.helpers.arrayElement(GENDER)
 
     const firstName = faker.person.firstName(
@@ -128,7 +130,7 @@ export async function seedStudents({
     } satisfies UploadedFileType
 
     for (let index = 0; index < count; index++) {
-        const student = createStudentData(image)
+        const student = createFakeStudentData(image)
 
         const course = faker.helpers.arrayElement(
             availableCourses,
@@ -168,20 +170,17 @@ export async function seedStudents({
 
             const numbers = await getNextEnrollmentNumbers()
 
-            // await tx.insert(enrollments).values({
-            //     studentId: newStudent.id,
-            //     courseId: course.id,
+            await tx.insert(enrollments).values({
+                studentId: newStudent.id,
+                courseId: course.id,
 
-            //     courseDuration: "6_months",
-            //     courseRange: "2027-07_2027-12",
-            //     medium: "bangla",
+                courseDuration: "3_months",
+                courseRange: "2026-01_2026-03",
+                medium: "bangla",
+                status: "active",
 
-            //     status: "active",
-            //     paidAmount: 300,
-            //     paymentStatus: "paid",
-
-            //     ...numbers,
-            // })
+                ...numbers,
+            })
         })
     }
 }

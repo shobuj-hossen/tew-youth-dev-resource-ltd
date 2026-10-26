@@ -14,33 +14,6 @@ import {
 import { eq, inArray } from "drizzle-orm"
 import { updateTag } from "next/cache"
 
-export const getCertificatesByIds = withPermission(
-    { branches: ["create"] },
-    async (
-        { org },
-        { enrollmentIds }: { enrollmentIds: string[] },
-    ) => {
-        const selectedEnrollments =
-            await db.query.enrollments.findMany({
-                where: { id: { in: enrollmentIds } },
-                with: {
-                    course: true,
-                    student: {
-                        columns: {
-                            fatherName: true,
-                            motherName: true,
-                            name: true,
-                        },
-                    },
-                },
-            })
-        return selectedEnrollments.map((d) => ({
-            ...d,
-            branchName: org.name,
-        }))
-    },
-)
-
 export const provideResults = withPermission(
     { branches: ["update"] },
     async (
@@ -166,5 +139,32 @@ export const updateBranchOneTimePayment = withPermission(
             message:
                 "One-time payment updated successfully",
         }
+    },
+)
+
+export const getCertificatesByIds = withPermission(
+    { branches: ["create"] },
+    async (
+        { org },
+        { enrollmentIds }: { enrollmentIds: string[] },
+    ) => {
+        const selectedEnrollments =
+            await db.query.enrollments.findMany({
+                where: { id: { in: enrollmentIds } },
+                with: {
+                    course: true,
+                    student: {
+                        columns: {
+                            fatherName: true,
+                            motherName: true,
+                            name: true,
+                        },
+                    },
+                },
+            })
+        return selectedEnrollments.map((d) => ({
+            ...d,
+            branchName: org.name,
+        }))
     },
 )

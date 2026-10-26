@@ -20,7 +20,7 @@ interface ContactMethod {
 
 const contactMethods: ContactMethod[] = [
     {
-        label: "Call us",
+        label: "Call us (offline or whatsapp)",
         value: company_client_config.COMPANY_PHONE_NUMBER,
         href: `tel:${company_client_config.COMPANY_PHONE_NUMBER}`,
         icon: Phone,
@@ -34,7 +34,7 @@ const contactMethods: ContactMethod[] = [
     {
         label: "Visit us",
         value: company_client_config.COMPANY_ADDRESS,
-        href: "https://maps.google.com/?q=Bangladesh",
+        href: "https://maps.app.goo.gl/CgA3Vj6qFQ8NEZ6F7",
         icon: MapPin,
     },
 ]

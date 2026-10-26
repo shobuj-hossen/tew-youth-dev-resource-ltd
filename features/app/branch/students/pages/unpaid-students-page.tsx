@@ -38,6 +38,11 @@ export async function UnpaidStudentsPage() {
                 data={res}
                 searchBy="name"
                 searchPlaceholder="Search by Name ..."
+                advancedFilteraccessorKeys={[
+                    "course",
+                    "courseDuration",
+                    "courseRange",
+                ]}
             />
         </Page>
     )

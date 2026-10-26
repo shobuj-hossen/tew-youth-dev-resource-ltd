@@ -10,7 +10,6 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { EnrollmentBranchById } from "../types"
 
 const columnHelper = createColumnHelper<
@@ -55,15 +54,6 @@ export const enrollmentsColumns = columnHelper.columns([
         ),
     }),
 
-    columnHelper.accessor("rollNumber", {
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                column={column}
-                title="Roll No."
-            />
-        ),
-    }),
-
     columnHelper.accessor("course.name", {
         id: "course",
         header: ({ column }) => (
@@ -96,32 +86,5 @@ export const enrollmentsColumns = columnHelper.columns([
                 title="Result"
             />
         ),
-    }),
-
-    columnHelper.accessor("paymentStatus", {
-        header: ({ column }) => (
-            <DataTableColumnHeader
-                column={column}
-                title="Payment Status"
-            />
-        ),
-
-        cell: ({ row }) => {
-            const status = row.original.paymentStatus
-
-            return (
-                <Badge
-                    variant={
-                        status === "paid"
-                            ? "default"
-                            : status === "unpaid"
-                              ? "secondary"
-                              : "ghost"
-                    }
-                >
-                    {status}
-                </Badge>
-            )
-        },
     }),
 ])

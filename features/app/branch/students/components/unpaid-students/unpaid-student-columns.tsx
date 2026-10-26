@@ -136,6 +136,7 @@ export const unpaidStudentColumns = columnHelper.columns([
 
             return (
                 <SubmitButton
+                    variant={"default"}
                     isPending={isPending}
                     onClick={() =>
                         mutate({

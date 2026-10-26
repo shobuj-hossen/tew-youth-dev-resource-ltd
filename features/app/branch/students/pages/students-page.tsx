@@ -39,6 +39,11 @@ export async function StudentsPage() {
                 data={students}
                 searchBy="name"
                 searchPlaceholder="Search by Name ..."
+                advancedFilteraccessorKeys={[
+                    "course",
+                    "courseDuration",
+                    "courseRange",
+                ]}
             />
         </Page>
     )

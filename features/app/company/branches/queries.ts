@@ -68,11 +68,19 @@ export const getEnrollmentsBranchId = withPermission(
             throw new NotFoundError()
         }
 
+        const branchData =
+            await db.query.branchApplications.findFirst({
+                where: { organizationId: org.id },
+                columns: { branchName: true, id: true },
+            })
+        if (!branchData) {
+            throw new NotFoundError()
+        }
         const students =
             await db.query.enrollments.findMany({
                 where: {
                     student: { organizationId: org.id },
-                    paymentStatus: "paid",
+                    paymentStatus: { NOT: "unpaid" },
                 },
                 with: { student: true, course: true },
             })
@@ -86,6 +94,7 @@ export const getEnrollmentsBranchId = withPermission(
             courseDuration: getDuration(
                 s.courseDuration as CourseDuration,
             ),
+            branchData,
         }))
     },
 )

@@ -45,10 +45,15 @@ export function SelectedEnrollmentsAction({
                         mothersName:
                             d.student?.motherName || "NA",
                         courseName: d.course?.name || "NA",
-                        branchName: d.branchName,
-                        branchCode: "",
+                        branchName:
+                            data[0].branchData.branchName,
+                        branchCode:
+                            data[0].branchData.id.slice(
+                                0,
+                                8,
+                            ),
                         held: d.courseRange,
-                        grade: "A+",
+                        grade: d.result || "",
                     }),
                 ),
             )

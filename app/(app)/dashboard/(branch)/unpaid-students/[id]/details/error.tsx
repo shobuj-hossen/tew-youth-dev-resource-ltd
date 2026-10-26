@@ -1,7 +1,10 @@
 "use client"
 
-import React from "react"
+import {
+    FallbackError,
+    FallbackErrorType,
+} from "@/components/shared/fallback-error"
 
-export default function error() {
-    return <div>error</div>
+export default function error(error: FallbackErrorType) {
+    return <FallbackError {...error} />
 }

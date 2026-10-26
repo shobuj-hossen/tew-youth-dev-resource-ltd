@@ -1,5 +1,5 @@
 "use client"
-import { Download, Pencil } from "lucide-react"
+import { Pencil } from "lucide-react"
 
 import {
     Avatar,
@@ -21,12 +21,7 @@ import {
     getCourseRangeLabel,
     getDuration,
 } from "../../constants"
-import { admissionFormPDF } from "../../pdf/admission-form-pdf"
-import {
-    Course,
-    StudentDetailsByEnrollmentId,
-} from "../../types"
-import { registrationCardPDF } from "../../pdf/registration-card-pdf"
+import { StudentDetailsByEnrollmentId } from "../../types"
 import DownloadButtons from "./download-buttons"
 
 export function StudentDetails({
