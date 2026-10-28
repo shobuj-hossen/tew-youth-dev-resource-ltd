@@ -437,3 +437,124 @@ export const acceptPayment = withPermission(
         redirect(session.GatewayPageURL)
     },
 )
+
+export const getAdmissionFormByStudentIds = withPermission(
+    { students: ["view"] },
+    async (
+        _,
+        { enrollmentIds }: { enrollmentIds: string[] },
+    ) => {
+        const enrollmentsData =
+            await db.query.enrollments.findMany({
+                where: {
+                    id: { in: enrollmentIds },
+                },
+                with: {
+                    student: {
+                        with: { qualifications: true },
+                    },
+                    course: true,
+                },
+            })
+
+        if (
+            enrollmentsData.length !== enrollmentIds.length
+        ) {
+            throw new NotFoundError(
+                "Some enrollments were not found",
+            )
+        }
+
+        return enrollmentsData
+    },
+)
+
+export const getStudentIdCardByIds = withPermission(
+    { students: ["view"] },
+    async (
+        { org },
+        { studentIds }: { studentIds: string[] },
+    ) => {
+        const studentsData =
+            await db.query.students.findMany({
+                where: { id: { in: studentIds } },
+            })
+
+        if (studentsData.length !== studentIds.length) {
+            throw new NotFoundError(
+                "Some students were not found",
+            )
+        }
+
+        return studentsData.map((d) => ({
+            ...d,
+            institutionName: org.name,
+        }))
+    },
+)
+
+import {
+    CourseDuration,
+    getCourseRangeLabel,
+    getDuration,
+} from "./constants"
+
+export const getRegistrationsEnrollmentIds = withPermission(
+    { students: ["view"] },
+    async (
+        { org },
+        { enrollmentIds }: { enrollmentIds: string[] },
+    ) => {
+        if (enrollmentIds.length === 0) {
+            return []
+        }
+
+        const enrollments =
+            await db.query.enrollments.findMany({
+                where: {
+                    id: { in: enrollmentIds },
+                },
+                with: {
+                    student: {
+                        with: {
+                            qualifications: true,
+                        },
+                    },
+                    course: {
+                        columns: {
+                            name: true,
+                        },
+                    },
+                },
+            })
+
+        if (enrollments.length !== enrollmentIds.length) {
+            throw new NotFoundError()
+        }
+
+        return enrollments.map((enrollment) => {
+            const student = enrollment.student
+
+            if (!student) {
+                throw new NotFoundError()
+            }
+
+            const duration =
+                enrollment.courseDuration as CourseDuration
+
+            return {
+                ...student,
+                qualifications: student.qualifications,
+
+                enrollment,
+                courseDuration: getDuration(duration),
+                courseRange: getCourseRangeLabel(
+                    enrollment.courseRange,
+                    duration,
+                ),
+
+                branchName: org.name,
+            }
+        })
+    },
+)

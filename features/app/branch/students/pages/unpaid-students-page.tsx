@@ -11,6 +11,7 @@ import { getUnpaidStudents } from "../queries"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Plus } from "lucide-react"
+import { SelectedUnpaidStudentsAction } from "../components/unpaid-students/selected-unpaid-students-actions"
 
 export async function UnpaidStudentsPage() {
     const res = await getUnpaidStudents()
@@ -43,6 +44,9 @@ export async function UnpaidStudentsPage() {
                     "courseDuration",
                     "courseRange",
                 ]}
+                BulkActionComponent={
+                    SelectedUnpaidStudentsAction
+                }
             />
         </Page>
     )

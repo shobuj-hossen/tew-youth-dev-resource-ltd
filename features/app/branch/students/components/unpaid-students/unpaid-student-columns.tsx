@@ -31,11 +31,6 @@ import { useMutation } from "@tanstack/react-query"
 import { acceptPayment } from "../../actions"
 import { UnpaidStudent } from "../../types"
 import { DeleteStudentDialog } from "./delete-student-dialog"
-import {
-    CourseDuration,
-    getCourseRangeLabel,
-    getDuration,
-} from "../../constants"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -136,6 +131,7 @@ export const unpaidStudentColumns = columnHelper.columns([
 
             return (
                 <SubmitButton
+                    className={"min-w-36"}
                     variant={"default"}
                     isPending={isPending}
                     onClick={() =>

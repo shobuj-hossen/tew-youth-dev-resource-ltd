@@ -11,6 +11,7 @@ import { studentColumns } from "../components/students/student-columns"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
+import { SelectedPaidStudentsAction } from "../components/students/selected-paid-students-action"
 
 export async function StudentsPage() {
     const students = await getStudents()
@@ -44,6 +45,9 @@ export async function StudentsPage() {
                     "courseDuration",
                     "courseRange",
                 ]}
+                BulkActionComponent={
+                    SelectedPaidStudentsAction
+                }
             />
         </Page>
     )

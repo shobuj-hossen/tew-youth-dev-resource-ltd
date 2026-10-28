@@ -3,7 +3,7 @@ import { Download } from "lucide-react"
 import { admissionFormPDF } from "../../pdf/admission-form-pdf"
 import { registrationCardPDF } from "../../pdf/registration-card-pdf"
 import { StudentDetailsByEnrollmentId } from "../../types"
-import { studentIdCardPDF } from "../../pdf/student-id-pdf"
+import { studentIdCardsPDF } from "../../pdf/student-id-card-pdf"
 
 export default function DownloadButtons({
     student,
@@ -15,6 +15,7 @@ export default function DownloadButtons({
     return (
         <div className="divide-y rounded-lg  flex gap-4">
             <Button
+                variant={"ghost"}
                 onClick={() => {
                     admissionFormPDF({
                         student: {
@@ -48,29 +49,33 @@ export default function DownloadButtons({
                 <Download /> Admission Form
             </Button>
             <Button
+                variant={"secondary"}
                 onClick={() => {
-                    studentIdCardPDF({
-                        student: {
-                            name: student.name,
-                            email: student.email || "",
-                            idNumber: student.id.slice(
-                                0,
-                                10,
-                            ),
-                            imageUrl:
-                                student.image.secureUrl,
-                            phone: student.mobile,
-                            social: "",
-                            institutionName:
-                                student.branchName,
+                    studentIdCardsPDF([
+                        {
+                            student: {
+                                name: student.name,
+                                email: student.email || "",
+                                idNumber: student.id.slice(
+                                    0,
+                                    10,
+                                ),
+                                imageUrl:
+                                    student.image.secureUrl,
+                                phone: student.mobile,
+                                social: "",
+                                institutionName:
+                                    student.branchName,
+                            },
                         },
-                    })
+                    ])
                 }}
             >
                 <Download /> ID Card
             </Button>
             {enrollment.paymentStatus === "paid" && (
                 <Button
+                    variant={"default"}
                     onClick={() => {
                         registrationCardPDF({
                             student: {
@@ -102,6 +107,9 @@ export default function DownloadButtons({
                                     student.createdAt
                                         .getFullYear()
                                         .toString(),
+                                courseName:
+                                    enrollment.course
+                                        ?.name || "",
                             },
                         })
                     }}

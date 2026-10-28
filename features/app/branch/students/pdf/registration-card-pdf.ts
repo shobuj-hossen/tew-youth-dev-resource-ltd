@@ -18,6 +18,7 @@ export type RegistrationCardData = {
         registrationNumber: string
         courseRange: string
         admissionYear: string
+        courseName: string
     }
 }
 
@@ -46,14 +47,9 @@ export const registrationCardPDF = (
 
     doc.setFontSize(16)
     doc.setFont("helvetica", "bold")
-    doc.text(
-        data.student.email || "Course Name",
-        105,
-        120,
-        {
-            align: "center",
-        },
-    )
+    doc.text(data.enrollment.courseName, 105, 120, {
+        align: "center",
+    })
 
     const startY = 142
 
