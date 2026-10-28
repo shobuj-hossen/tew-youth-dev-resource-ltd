@@ -31,7 +31,7 @@ import { DataTableViewOptions } from "./data-table-view-options"
 interface DataTableProps<TData extends RowData> {
     columns: ColumnDef<DataTableFeatures, TData>[]
     data: TData[]
-    searchBy?: "name" | "email" | "branchName"
+    searchBy?: "name" | "email" | "branchName" | "title"
     searchPlaceholder?: string
     BulkActionComponent?: React.ComponentType<{
         data: TData[]

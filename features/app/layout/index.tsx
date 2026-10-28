@@ -11,6 +11,7 @@ import { getSidebarData } from "../queries"
 import { AppSidebar } from "./app-sidebar"
 import { ErrorBoundary } from "react-error-boundary"
 import { FallbackAppLayout } from "./fallback-index"
+import { TaskReminder } from "./pending-task-reminder"
 
 export function AppLayout(props: LayoutProps<"/">) {
     return (
@@ -27,6 +28,7 @@ export function AppLayout(props: LayoutProps<"/">) {
                                 <AppBreadcrumb />
                             </Suspense>
                         </div>
+                        <TaskReminder />
                     </header>
                     <div className="p-6 pt-0 ">
                         {props.children}

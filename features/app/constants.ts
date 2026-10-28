@@ -75,6 +75,10 @@ export const navData: NavDataType = {
                     title: "Roles & Permissions",
                     url: "/dashboard/roles-permissions",
                 },
+                {
+                    title: "Tasks",
+                    url: "/dashboard/tasks",
+                },
             ],
         },
     ],

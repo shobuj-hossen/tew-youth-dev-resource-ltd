@@ -28,6 +28,7 @@ export const relations = defineRelations(schema, (r) => ({
         invitations: r.many.invitations(),
         organizationRoles: r.many.organizationRoles(),
         students: r.many.students(),
+        tasks: r.many.tasks(),
     },
 
     organizationRoles: {
@@ -101,6 +102,12 @@ export const relations = defineRelations(schema, (r) => ({
         student: r.one.students({
             from: r.studentAcademicQualifications.studentId,
             to: r.students.id,
+        }),
+    },
+    tasks: {
+        organization: r.one.organizations({
+            from: r.tasks.organizationId,
+            to: r.organizations.id,
         }),
     },
 }))

@@ -39,6 +39,12 @@ export const resources = {
             "update",
             "delete",
         ] as const,
+        tasks: [
+            "view",
+            "create",
+            "update",
+            "delete",
+        ] as const,
         roles_permissions: [
             "view",
             "create",
@@ -55,5 +61,5 @@ export const {
     branches,
 } = resources.company
 export const { students } = resources.branch
-export const { users, roles_permissions, sidebar } =
+export const { users, roles_permissions, sidebar, tasks } =
     resources.common

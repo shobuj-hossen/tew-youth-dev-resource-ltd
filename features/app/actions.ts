@@ -2,6 +2,7 @@
 
 import { db } from "@/drizzle/db"
 import { transactions } from "@/drizzle/schema"
+import { withPermission } from "@/lib/dal"
 import { createSSLSession } from "@/lib/ssl-commerz/actions"
 import { redirect } from "next/navigation"
 
@@ -39,3 +40,34 @@ export async function oneTimePayment({
 
     redirect(session.GatewayPageURL)
 }
+
+export const getPendingTaskReminders = withPermission(
+    { tasks: ["view"] },
+    async ({ org, user }) => {
+        const role = user.role
+
+        return db.query.tasks.findMany({
+            where: {
+                AND: [
+                    { organizationId: org.id },
+                    { isCompleted: false },
+                    {
+                        OR: [
+                            { assignedTo: "all" },
+                            { assignedTo: role || "" },
+                        ],
+                    },
+                ],
+            },
+            columns: {
+                id: true,
+                title: true,
+                dueDate: true,
+                category: true,
+            },
+            orderBy: (tasks, { asc }) => [
+                asc(tasks.dueDate),
+            ],
+        })
+    },
+)
