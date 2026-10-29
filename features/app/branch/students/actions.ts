@@ -1,8 +1,10 @@
 "use server"
 import { withPermission } from "@/lib/dal"
 import {
+    createEnrollmentNoteFormSchema,
     enrollmentInformationSchema,
     EnrollmentInformationSchemaType,
+    EnrollmentNoteFormValues,
     studentSchema,
     StudentSchemaType,
     updateStudentSchema,
@@ -15,12 +17,13 @@ import {
 import { db, txDB } from "@/drizzle/db"
 import { uploadToCloudinary } from "@/lib/cloudinary/upload"
 import {
+    enrollmentNotes,
     enrollments,
     studentAcademicQualifications,
     students,
     transactions,
 } from "@/drizzle/schema"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 import { deleteFromCloudinary } from "@/lib/cloudinary/delete"
 import { updateTag } from "next/cache"
 import { message } from "@/utils/message"
@@ -556,5 +559,61 @@ export const getRegistrationsEnrollmentIds = withPermission(
                 branchName: org.name,
             }
         })
+    },
+)
+
+export const getEnrollmentNotes = withPermission(
+    { students: ["view"] },
+    async (
+        _context,
+        { enrollmentId }: { enrollmentId: string },
+    ) => {
+        return db.query.enrollmentNotes.findMany({
+            where: { enrollmentId },
+            columns: {
+                id: true,
+                enrollmentId: true,
+                note: true,
+                timeStamp: true,
+            },
+            orderBy: { timeStamp: "desc" },
+        })
+    },
+)
+
+export const addEnrollmentNote = withPermission(
+    { students: ["update"] },
+    async (_context, input: EnrollmentNoteFormValues) => {
+        const { data, success } =
+            createEnrollmentNoteFormSchema.safeParse(input)
+        if (!success) {
+            throw new ValidationError()
+        }
+
+        await db.insert(enrollmentNotes).values({
+            enrollmentId: data.enrollmentId,
+            note: data.note,
+            timeStamp: new Date(data.timeStamp),
+        })
+
+        return { message: " New Note Added" }
+    },
+)
+
+export const deleteEnrollmentNote = withPermission(
+    { students: ["update"] },
+    async (_context, { noteId }: { noteId: string }) => {
+        const [deleted] = await db
+            .delete(enrollmentNotes)
+            .where(eq(enrollmentNotes.id, noteId))
+            .returning({
+                id: enrollmentNotes.id,
+            })
+
+        if (!deleted) {
+            throw new Error("Enrollment note not found")
+        }
+
+        return { message: "Deleted" }
     },
 )

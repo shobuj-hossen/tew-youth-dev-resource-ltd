@@ -25,6 +25,8 @@ import {
 import { useRouter } from "next/navigation"
 
 import { Student } from "../../types"
+import { useState } from "react"
+import { EnrollmentNotesDialog } from "../enrollment-notes/enrollment-notes-dialog"
 
 const columnHelper = createColumnHelper<
     DataTableFeatures,
@@ -136,6 +138,8 @@ export const studentColumns = columnHelper.columns([
         id: "actions",
         cell: ({ row }) => {
             const router = useRouter()
+            const [noteEnrollmentId, setNoteErollmentId] =
+                useState<string>("")
 
             return (
                 <div>
@@ -188,9 +192,23 @@ export const studentColumns = columnHelper.columns([
                                 >
                                     Join Another Course
                                 </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        setNoteErollmentId(
+                                            row.original.id,
+                                        )
+                                    }
+                                >
+                                    Add Note
+                                </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
+
+                    <EnrollmentNotesDialog
+                        setEnrollmentId={setNoteErollmentId}
+                        enrollmentId={noteEnrollmentId}
+                    />
                 </div>
             )
         },

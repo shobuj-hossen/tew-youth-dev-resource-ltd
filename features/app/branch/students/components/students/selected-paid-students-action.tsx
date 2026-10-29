@@ -15,26 +15,31 @@ import {
     Download,
     Loader2,
     MoreHorizontal,
+    SendIcon,
 } from "lucide-react"
-import { Student, UnpaidStudent } from "../../types"
+import { Student } from "../../types"
 
+import { CustomSMSDialog } from "@/lib/bulk-sms/ui/custom-sms-wrapper"
+import { useState } from "react"
 import {
     getAdmissionFormByStudentIds,
     getRegistrationsEnrollmentIds,
     getStudentIdCardByIds,
 } from "../../actions"
 import { admissionFormPDF } from "../../pdf/admission-form-pdf"
+import { registrationCardPDF } from "../../pdf/registration-card-pdf"
 import {
     StudentIdCardData,
     studentIdCardsPDF,
 } from "../../pdf/student-id-card-pdf"
-import { registrationCardPDF } from "../../pdf/registration-card-pdf"
 
 export function SelectedPaidStudentsAction({
     data,
 }: {
     data: Student[]
 }) {
+    const [openCustomSMS, setOpenCustomSMS] =
+        useState(false)
     const enrollmentIds = data.map((d) => d.id)
     const studentIds = data
         .map((d) => d.student?.id)
@@ -231,9 +236,29 @@ export function SelectedPaidStudentsAction({
                                 ? "Downloading..."
                                 : "Registration Card"}
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                            closeOnClick={false}
+                            onClick={() =>
+                                setOpenCustomSMS(true)
+                            }
+                        >
+                            <SendIcon />
+                            Send SMS
+                        </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <CustomSMSDialog
+                open={openCustomSMS}
+                setOpen={setOpenCustomSMS}
+                recipients={[
+                    ...data.map((d) => ({
+                        id: d.id,
+                        name: d.student?.name,
+                        phoneNumber: d.student?.mobile,
+                    })),
+                ]}
+            />
         </div>
     )
 }

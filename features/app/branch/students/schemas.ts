@@ -220,3 +220,23 @@ export const updateStudentSchema = z.object({
 export type UpdateStudentSchemaType = z.infer<
     typeof updateStudentSchema
 >
+
+// schemas for notes
+
+const noteTextSchema = z
+    .string()
+    .trim()
+    .min(1, "Note is required")
+    .max(5000, "Note must be 5000 characters or less")
+
+const dateTimeSchema = z.date()
+
+export const createEnrollmentNoteFormSchema = z.object({
+    enrollmentId: z.uuid(),
+    note: noteTextSchema,
+    timeStamp: dateTimeSchema,
+})
+
+export type EnrollmentNoteFormValues = z.infer<
+    typeof createEnrollmentNoteFormSchema
+>

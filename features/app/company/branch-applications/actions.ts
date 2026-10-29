@@ -135,7 +135,7 @@ export const createNewBranchWorkspace = withPermission(
                 )
 
             //send email
-            await sendEmailBranchApproved({
+            sendEmailBranchApproved({
                 branchName: branchName,
                 email,
                 firstName: ownerName,

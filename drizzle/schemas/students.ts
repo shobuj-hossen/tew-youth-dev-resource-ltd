@@ -2,10 +2,8 @@ import {
     BLOOD_GROUPS,
     ENROLLMENT_STATUS,
     GENDER,
-    PAYMENT_STATUS,
 } from "@/features/app/branch/students/constants"
 import {
-    boolean,
     date,
     index,
     integer,
@@ -14,6 +12,7 @@ import {
     pgSequence,
     snakeCase,
     text,
+    timestamp,
     uniqueIndex,
     uuid,
     varchar,
@@ -240,4 +239,19 @@ export const enrollments = snakeCase.table(
         ),
         index("enrollments_status_idx").on(table.status),
     ],
+)
+export const enrollmentNotes = snakeCase.table(
+    "enrollment_notes",
+
+    {
+        id,
+        enrollmentId: uuid()
+            .notNull()
+            .references(() => enrollments.id, {
+                onDelete: "cascade",
+            }),
+
+        note: text().notNull(),
+        timeStamp: timestamp().defaultNow().notNull(),
+    },
 )

@@ -15,6 +15,7 @@ import {
     Download,
     Loader2,
     MoreHorizontal,
+    SendIcon,
 } from "lucide-react"
 import { UnpaidStudent } from "../../types"
 
@@ -27,12 +28,19 @@ import {
     StudentIdCardData,
     studentIdCardsPDF,
 } from "../../pdf/student-id-card-pdf"
+import {
+    CustomSMSDialog,
+    SMSRecipient,
+} from "@/lib/bulk-sms/ui/custom-sms-wrapper"
+import { useState } from "react"
 
 export function SelectedUnpaidStudentsAction({
     data,
 }: {
     data: UnpaidStudent[]
 }) {
+    const [openCustomSMS, setOpenCustomSMS] =
+        useState(false)
     const enrollmentIds = data.map((d) => d.id)
     const studentIds = data
         .map((d) => d.student?.id)
@@ -167,9 +175,31 @@ export function SelectedUnpaidStudentsAction({
                                 ? "Downloading..."
                                 : "Student Id"}
                         </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                            closeOnClick={false}
+                            onClick={() =>
+                                setOpenCustomSMS(true)
+                            }
+                        >
+                            <SendIcon />
+                            Send SMS
+                        </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
+
+            <CustomSMSDialog
+                open={openCustomSMS}
+                setOpen={setOpenCustomSMS}
+                recipients={[
+                    ...data.map((d) => ({
+                        id: d.id,
+                        name: d.student?.name,
+                        phoneNumber: d.student?.mobile,
+                    })),
+                ]}
+            />
         </div>
     )
 }
