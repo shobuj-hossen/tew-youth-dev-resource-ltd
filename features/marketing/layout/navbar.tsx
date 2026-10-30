@@ -39,7 +39,7 @@ const navOptions: {
     },
     {
         label: "Results",
-        href: "/",
+        href: "/results",
     },
 ]
 export function Navbar({

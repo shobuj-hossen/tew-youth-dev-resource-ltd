@@ -196,3 +196,51 @@ export const branchApplicationDefaults: BranchApplicationSchemaType =
         nidDocument: undefined as unknown as File,
         tradeLicense: undefined as unknown as File,
     }
+
+// for results
+
+export const publicResultSchema = z.object({
+    rollNumber: z
+        .string()
+        .trim()
+        .min(1, "Roll number is required")
+        .max(30),
+
+    registrationNumber: z
+        .string()
+        .trim()
+        .min(1, "Registration number is required")
+        .max(40),
+
+    captchaAnswer: z
+        .string()
+        .trim()
+        .regex(
+            /^\d{1,3}$/,
+            "Enter the correct CAPTCHA answer",
+        ),
+
+    captchaToken: z.string().min(1),
+})
+
+export type PublicResultInput = z.infer<
+    typeof publicResultSchema
+>
+
+export type PublicStudentResult = {
+    student: {
+        name: string
+        fatherName: string
+        motherName: string
+    }
+    enrollment: {
+        rollNumber: string
+        registrationNumber: string
+        serialNo: string
+        courseDuration: string
+        courseRange: string
+        medium: string
+        status: string
+        result: string
+    }
+}
